@@ -2,7 +2,7 @@ repos:
   - repo: local
     hooks:
       - id: pylint
-        args: [--ignore=version.py]
+        args: [--ignore=setup.py, --fail-under=9]
         name: pylint
         entry: .tox/pre-commit/bin/pylint
         language: system

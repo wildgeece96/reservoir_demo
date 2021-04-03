@@ -1,10 +1,10 @@
 """Echo State Networkなどを定義する場所"""
-import numpy as np
 from typing import Dict
 from typing import Callable
+import numpy as np
 
 
-class EchoStateNetwork(object):
+class EchoStateNetwork():
     """Echo State Networkの基本クラス"""
     def __init__(self,
                  d_in: int,
@@ -19,7 +19,7 @@ class EchoStateNetwork(object):
         self.d_out = d_out
         self._setup_parameters(density, rho_w, init_type)
         self.activation = activation
-        self.X_state = np.random.randn(batch_size, self.d_hidden)
+        self.x_state = None
 
     def _setup_parameters(self, density, rho_w, init_type):
         if init_type and "input" in init_type:
@@ -42,7 +42,10 @@ class EchoStateNetwork(object):
 
     def step_forward(self, input_vector, leak_rate=0.8):
         """ネットワークの状態を1ステップ分すすめる"""
-        self.X_state = (1 - leak_rate) * self.X_state + self.activation(
-            np.dot(self.input_vector, self.w_in) +
-            np.dot(self.X_state, self.w_hidden))
-        self.y_output = np.dot(self.X_state, self.w_out)
+        if not self.x_state:
+            batch_size = input_vector.shape[0]
+            self.x_state = np.random.randn(batch_size, self.d_hidden)
+        self.x_state = (1 - leak_rate) * self.x_state + self.activation(
+            np.dot(input_vector, self.w_in) +
+            np.dot(self.x_state, self.w_hidden))
+        return np.dot(self.x_state, self.w_out)
