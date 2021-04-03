@@ -1,0 +1,6 @@
+numpy
+matplotlib
+pylint
+pre-commit
+yapf
+pytest
