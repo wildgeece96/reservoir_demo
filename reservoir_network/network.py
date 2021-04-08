@@ -88,3 +88,9 @@ class EchoStateNetwork():
                 input_vectors[step], leak_rate=leak_rate).copy()
             record_states[step] = self.x_state.copy()
         return record_states, record_outputs
+
+    def update_readout(self, new_weights):
+        """読み出し部分の重みを更新する"""
+        assert new_weights.shape == self.w_out.shape, "shape doesn't match %s vs %s" % (
+            new_weights.shape, self.w_out.shape)
+        self.w_out = new_weights
